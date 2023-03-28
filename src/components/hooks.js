@@ -8,10 +8,10 @@ export const useCreateMap = (mapRef) => {
     const initializeMap = async (mapRef) => {
       const modules = [
         "esri/Map",
-        "esri/views/MapView",
-        "esri/layers/GeoJSONLayer"
+        "esri/views/MapView", 
+        "esri/Graphic"
       ];
-      const [Map, MapView, GeoJSONLayer] = await loadModules(modules);
+      const [Map, MapView, Graphic] = await loadModules(modules);
       
       const map = new Map({ 
         basemap: "topo-vector" 
@@ -23,16 +23,36 @@ export const useCreateMap = (mapRef) => {
         zoom: 11,
         center: [-0.1278, 51.5074] // London coordinates
       });
-      
-      const url =
-        "http://localhost:8080/";
 
-      const geojsonLayer = new GeoJSONLayer({
-        url: url,
-        title: "Power Network Lines"
+      const polyline = {
+        type: "polyline", // autocasts as new Polyline()
+        paths: [[-111.3, 52.68], [-98, 49.5], [-93.94, 29.89]]
+      };
+
+      const polylineGraphic = new Graphic({
+        geometry: polyline
       });
+
+      view.graphics.add(polylineGraphic)
+    
       
-      map.add(geojsonLayer);
+      // const url =
+      //   "http://localhost:8080/";
+
+      // const geojsonLayer = new GeoJSONLayer({
+      //   url: url,
+      //   title: "Power Network Lines",
+      //   renderer: {
+      //     type: "simple",
+      //     symbol: {
+      //       type: "simple-line",
+      //       color: [255, 0, 0, 1],
+      //       width: 2
+      //     }
+      //   }
+      // });
+      
+      // map.add(geojsonLayer);
     };
 
     initializeMap(mapRef);

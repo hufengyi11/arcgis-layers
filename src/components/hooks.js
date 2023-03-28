@@ -25,7 +25,7 @@ export const useCreateMap = (mapRef) => {
       });
       
       const url =
-        "ui/src/components/132kv-overhead-lines.geojson";
+        "http://localhost:8080/";
 
       const geojsonLayer = new GeoJSONLayer({
         url: url,

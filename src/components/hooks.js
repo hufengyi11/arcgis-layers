@@ -24,11 +24,8 @@ export const useCreateMap = (mapRef) => {
         center: [-0.1278, 51.5074] // London coordinates
       });
       
-      // const url =
-      //   "ui/src/components/132kv-overhead-lines.geojson";
-
-      const url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
-
+      const url =
+        "ui/src/components/132kv-overhead-lines.geojson";
 
       const geojsonLayer = new GeoJSONLayer({
         url: url,

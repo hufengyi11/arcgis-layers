@@ -9,12 +9,13 @@ export const useCreateMap = (mapRef) => {
       const modules = [
         "esri/Map",
         "esri/views/MapView",
-        "esri/layers/FeatureLayer"
+        "esri/layers/FeatureLayer",
       ];
+      
       const [Map, MapView, FeatureLayer] = await loadModules(modules);
       
       const map = new Map({ 
-        basemap: "topo-vector" 
+        basemap: "topo-vector"
       });
       
       view = new MapView({ 
@@ -24,13 +25,24 @@ export const useCreateMap = (mapRef) => {
         center: [-0.1278, 51.5074] // London coordinates
       });
 
+      const lineRenderer = {
+        type: "simple",
+        symbol: {
+          color: "#FFA500",
+          type: "simple-line",
+          style: "solid"
+        }
+      }
+
       const fl = new FeatureLayer({
         portalItem: {  
           id: "54d29ca67d1c4d269677274b88734b8f" // 132kV
-        }
+        },
+        renderer: lineRenderer
       });
-      
-      map.add(fl);
+
+      map.add(fl)
+
     };
 
     initializeMap(mapRef);

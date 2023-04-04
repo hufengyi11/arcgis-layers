@@ -9,8 +9,9 @@ function Map() {
     loadModules([
       "esri/WebScene",
       "esri/views/SceneView",
-      "esri/widgets/Legend"
-    ]).then(([WebScene, SceneView, Legend]) => {
+      "esri/widgets/Legend",
+      'esri/widgets/LayerList'
+    ]).then(([WebScene, SceneView, Legend, LayerList]) => {
       const webscene = new WebScene({
         portalItem: {
           id: "c331bd42f3544e9fa39ed4289f5c254b"
@@ -27,6 +28,15 @@ function Map() {
       });
 
       view.ui.add(legend, "top-right");
+
+      // Add layer list widget
+      const layerList = new LayerList({
+        view: view
+      });
+
+      view.ui.add(layerList, {
+        position: 'top-right'
+      });
 
       return () => {
         if (view) {

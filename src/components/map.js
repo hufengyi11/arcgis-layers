@@ -1,8 +1,11 @@
 import { useEffect } from "react";
-import { loadModules } from "esri-loader";
+import { setDefaultOptions, loadModules } from "esri-loader";
+
+setDefaultOptions({ css: true });
 
 function Map() {
   useEffect(() => {
+
     loadModules([
       "esri/WebScene",
       "esri/views/SceneView",

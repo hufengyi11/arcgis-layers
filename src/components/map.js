@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { loadModules } from "esri-loader";
 
-const Map = () => {
+function Map() {
   useEffect(() => {
     loadModules([
       "esri/WebScene",
@@ -19,17 +19,22 @@ const Map = () => {
         map: webscene
       });
 
-      const legend = new Legend ({
-        view:view
+      const legend = new Legend({
+        view: view
       });
 
       view.ui.add(legend, "top-right");
-    }).catch(err => {
-      console.error(err);
-    })
+
+      return () => {
+        if (view) {
+          // destroy the map view
+          view.container = null;
+        }
+      };
+    });
   }, []);
 
-  return <div id="viewDiv" />;
-};
+  return <div id="viewDiv" style={{ height: "100vh" }}></div>;
+}
 
 export default Map;

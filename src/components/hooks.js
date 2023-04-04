@@ -7,45 +7,33 @@ export const useCreateMap = (mapRef) => {
 
     const initializeMap = async (mapRef) => {
       const modules = [
-        "esri/Map",
-        "esri/views/MapView",
-        "esri/layers/FeatureLayer",
+        "esri/WebScene",
+        "esri/views/SceneView",
+        "esri/widgets/Legend"
       ];
       
-      const [Map, MapView, FeatureLayer] = await loadModules(modules);
-      
-      const map = new Map({ 
-        basemap: "topo-vector"
-      });
-      
-      view = new MapView({ 
-        container: mapRef.current,
-        map: map,
-        zoom: 8,
-        center: [-0.1278, 51.5074] // London coordinates
-      });
+      const [WebScene, SceneView, Legend] = await loadModules(modules);
 
-      const lineRenderer = {
-        type: "simple",
-        symbol: {
-          color: "#FFA500",
-          type: "simple-line",
-          style: "solid"
+      const webscene = new WebScene({
+        portalItem: {
+          id: "c331bd42f3544e9fa39ed4289f5c254b"
         }
-      }
-
-      const fl = new FeatureLayer({
-        portalItem: {  
-          id: "54d29ca67d1c4d269677274b88734b8f" // 132kV
-        },
-        renderer: lineRenderer
       });
 
-      map.add(fl)
+      const view = new SceneView({
+        container: "viewDiv",
+        map: webscene
+      });
 
+      const legend = new Legend ({
+        view:view
+      });
+
+      view.ui.add(legend, "top-right");
     };
 
     initializeMap(mapRef);
+    console.log("Initializing map...");
 
     return () => view?.destroy();
   }, [mapRef]);

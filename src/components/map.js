@@ -11,8 +11,17 @@ function Map() {
       "esri/views/SceneView",
       "esri/widgets/Legend",
       'esri/widgets/Search',
-      'esri/widgets/LayerList'
-    ]).then(([WebScene, SceneView, Search, Legend, LayerList]) => {
+      'esri/widgets/LayerList',
+      "esri/widgets/ScaleBar",
+      "esri/widgets/Sketch",
+      "esri/Graphic",
+      "esri/layers/GraphicsLayer",
+      "esri/geometry/geometryEngine",
+    ]).then(([WebScene, SceneView, Search, LayerList, Legend, ScaleBar,
+      Sketch,
+      Graphic,
+      GraphicsLayer,
+      geometryEngine,]) => {
       const webscene = new WebScene({
         portalItem: {
           id: "c331bd42f3544e9fa39ed4289f5c254b"
@@ -24,6 +33,7 @@ function Map() {
         map: webscene
       });
 
+      // Add search
       const search = new Search({
         view: view
       });
@@ -42,11 +52,38 @@ function Map() {
         position: 'top-right'
       });
 
+      // Add legend
       const legend = new Legend({
         view: view
       });
 
       view.ui.add(legend, "top-right");
+      
+      const graphicsLayer = new GraphicsLayer();
+      webscene.add(graphicsLayer);
+
+      // Add sketch
+      const sketch = new Sketch({
+        view: view,
+        layer: view.map.allLayers.getItemAt(0),
+        availableCreateTools: ["polyline", "polygon", "rectangle"],
+        creationMode: "update",
+        updateOnGraphicClick: true,
+        visibleElements: {
+          createTools: {
+            point: false,
+            circle: false
+          },
+          selectionTools:{
+            "lasso-selection": false,
+            "rectangle-selection":false,
+          },
+          settingsMenu: false,
+          undoRedoMenu: false
+        }
+      });
+
+      view.ui.add(sketch, "top-right");
 
       return () => {
         if (view) {

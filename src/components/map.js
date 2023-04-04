@@ -17,11 +17,20 @@ function Map() {
       "esri/Graphic",
       "esri/layers/GraphicsLayer",
       "esri/geometry/geometryEngine",
-    ]).then(([WebScene, SceneView, Search, LayerList, Legend, ScaleBar,
+      "esri/widgets/BasemapToggle",
+      "esri/widgets/BasemapGallery",
+    ]).then(([WebScene, 
+      SceneView, 
+      Search, 
+      LayerList, 
+      Legend, 
+      ScaleBar,
       Sketch,
       Graphic,
       GraphicsLayer,
-      geometryEngine,]) => {
+      geometryEngine,
+      BasemapToggle, 
+      BasemapGallery,]) => {
       const webscene = new WebScene({
         portalItem: {
           id: "c331bd42f3544e9fa39ed4289f5c254b"
@@ -72,26 +81,48 @@ function Map() {
         visibleElements: {
           createTools: {
             point: false,
+            polygon: true,
+            polyline: true,
+            rectangle: false,
             circle: false
           },
           selectionTools:{
             "lasso-selection": false,
             "rectangle-selection":false,
           },
-          settingsMenu: false,
-          undoRedoMenu: false
+          settingsMenu: true,
+          undoRedoMenu: true
         }
       });
 
       view.ui.add(sketch, "top-right");
 
-      return () => {
-        if (view) {
-          // destroy the map view
-          view.container = null;
+      // Add basemap 
+      const basemapToggle = new BasemapToggle({
+        view: view,
+        nextBasemap: "arcgis-imagery"
+     });
+
+      view.ui.add(basemapToggle,"bottom-right");
+
+      const basemapGallery = new BasemapGallery({
+        view: view,
+        source: {
+          query: {
+            title: '"World Basemaps for Developers" AND owner:esri'
+          }
         }
-      };
-    });
+      });
+
+      view.ui.add(basemapGallery, "top-right"); // Add to the view
+
+    return () => {
+      if (view) {
+        // destroy the map view
+        view.container = null;
+      }
+    };
+  });
   }, []);
 
   return <div id="viewDiv" style={{ height: "100vh" }}></div>;

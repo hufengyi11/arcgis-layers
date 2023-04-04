@@ -14,12 +14,16 @@ function Map() {
       'esri/widgets/LayerList',
       "esri/widgets/Sketch",
       "esri/layers/GraphicsLayer",
-    ]).then(([WebScene, 
+      "esri/layers/FeatureLayer",    
+    ]).then(([
+      WebScene, 
       SceneView, 
       Search, 
       LayerList, 
       Sketch,
-      GraphicsLayer,]) => {
+      GraphicsLayer,
+      FeatureLayer]) => {
+
       const webscene = new WebScene({
         portalItem: {
           id: "c331bd42f3544e9fa39ed4289f5c254b"
@@ -31,13 +35,36 @@ function Map() {
         map: webscene
       });
 
+      const featureLayerDistricts = new FeatureLayer({
+        url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_117th_Congressional_Districts_all/FeatureServer/0",
+      });
+
       // Add search
       const search = new Search({
-        view: view
+        view: view,
+        allPlaceholder: "Search Layers",
+        includeDefaultSources: false,
+        sources: [
+          // {
+          //   layer: new FeatureLayer({
+          //     url: "https://services1.arcgis.com/q63dRGvxpbXwQKMG/arcgis/rest/services/132kvoverheadlines/FeatureServer/0",
+          //     outFields: ["*"]
+          //   }),
+          //   searchFields: ["dno", "voltage", "ob_class", "recordid", "datasetid"],
+          //   displayField: "dno",
+          //   name: "132kV Overhead Lines"
+          // }, 
+          {
+            name: "ArcGIS World Geocoding Service",
+            placeholder: "example: London",
+            apiKey: "AAPK1d77186557e04a708ac0ca3713bf1e3c56gInDTOMBdRESlP3f2mCo1Uq6evk7iGV61P3bjA2lgBZn5fkrcQU4xfPZUZkbgh",
+            singleLineFieldName: "SingleLine",
+            url: "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+          }
+        ]
       });
       
-            // Add a legend instance to the panel of a
-      // ListItem in a LayerList instance
+      // Add a legend instance to the panel of a ListItem in a LayerList instance
       const layerList = new LayerList({
         view: view,
         listItemCreatedFunction: (event) => {
@@ -51,25 +78,20 @@ function Map() {
           }
         }
       });
-      view.ui.add(layerList, "top-right");
-
       
       // Add sketch widget
-      const graphicsLayerSketch = new GraphicsLayer();
-      webscene.add(graphicsLayerSketch);
-
+      const graphicsLayer = new GraphicsLayer();
+      webscene.add(graphicsLayer);
+      
       // Add sketch
       const sketch = new Sketch({
       // layer: view.map.allLayers.getItemAt(0),
-        layer: graphicsLayerSketch,
+        layer: graphicsLayer,
         view: view,
         creationMode: "update" // Auto-select
       });
 
-      view.ui.add(search, {
-        position: 'top-right',
-        index: 0
-      });
+      view.ui.add(search, 'top-right');
       view.ui.add(sketch, "top-right");
       view.ui.add(layerList, "top-right");
 

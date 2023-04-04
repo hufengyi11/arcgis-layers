@@ -4,29 +4,22 @@ import { setDefaultOptions, loadModules } from "esri-loader";
 setDefaultOptions({ css: true });
 
 function Map() {
+
   useEffect(() => {
 
     loadModules([
       "esri/WebScene",
       "esri/views/SceneView",
-      "esri/widgets/Legend",
       'esri/widgets/Search',
       'esri/widgets/LayerList',
       "esri/widgets/Sketch",
       "esri/layers/GraphicsLayer",
-      "esri/widgets/BasemapToggle",
-      "esri/widgets/BasemapGallery",
-      "esri/layers/FeatureLayer",
     ]).then(([WebScene, 
       SceneView, 
       Search, 
       LayerList, 
-      Legend, 
       Sketch,
-      GraphicsLayer,
-      BasemapToggle, 
-      BasemapGallery,
-      FeatureLayer,]) => {
+      GraphicsLayer,]) => {
       const webscene = new WebScene({
         portalItem: {
           id: "c331bd42f3544e9fa39ed4289f5c254b"
@@ -42,32 +35,28 @@ function Map() {
       const search = new Search({
         view: view
       });
-
-      view.ui.add(search, {
-        position: 'top-left',
-        index: 0
-      });
       
-      // Add layer list widget
+            // Add a legend instance to the panel of a
+      // ListItem in a LayerList instance
       const layerList = new LayerList({
-        view: view
+        view: view,
+        listItemCreatedFunction: (event) => {
+          const item = event.item;
+          if (item.layer.type !== "group") {
+            // don't show legend twice
+            item.panel = {
+              content: "legend",
+              open: true
+            };
+          }
+        }
       });
+      view.ui.add(layerList, "top-right");
 
-      view.ui.add(layerList, {
-        position: 'top-right'
-      });
-
-      // Add legend
-      const legend = new Legend({
-        view: view
-      });
-
-      view.ui.add(legend, "top-right");
       
       // Add sketch widget
       const graphicsLayerSketch = new GraphicsLayer();
       webscene.add(graphicsLayerSketch);
-
 
       // Add sketch
       const sketch = new Sketch({
@@ -77,26 +66,12 @@ function Map() {
         creationMode: "update" // Auto-select
       });
 
-      view.ui.add(sketch, "top-right");
-
-      // Add basemap 
-      const basemapToggle = new BasemapToggle({
-        view: view,
-        nextBasemap: "arcgis-imagery"
-     });
-
-      view.ui.add(basemapToggle,"bottom-right");
-
-      const basemapGallery = new BasemapGallery({
-        view: view,
-        source: {
-          query: {
-            title: '"World Basemaps for Developers" AND owner:esri'
-          }
-        }
+      view.ui.add(search, {
+        position: 'top-right',
+        index: 0
       });
-
-      view.ui.add(basemapGallery, "top-right"); // Add to the view
+      view.ui.add(sketch, "top-right");
+      view.ui.add(layerList, "top-right");
 
     return () => {
       if (view) {

@@ -12,25 +12,21 @@ function Map() {
       "esri/widgets/Legend",
       'esri/widgets/Search',
       'esri/widgets/LayerList',
-      "esri/widgets/ScaleBar",
       "esri/widgets/Sketch",
-      "esri/Graphic",
       "esri/layers/GraphicsLayer",
-      "esri/geometry/geometryEngine",
       "esri/widgets/BasemapToggle",
       "esri/widgets/BasemapGallery",
+      "esri/layers/FeatureLayer",
     ]).then(([WebScene, 
       SceneView, 
       Search, 
       LayerList, 
       Legend, 
-      ScaleBar,
       Sketch,
-      Graphic,
       GraphicsLayer,
-      geometryEngine,
       BasemapToggle, 
-      BasemapGallery,]) => {
+      BasemapGallery,
+      FeatureLayer,]) => {
       const webscene = new WebScene({
         portalItem: {
           id: "c331bd42f3544e9fa39ed4289f5c254b"
@@ -68,31 +64,17 @@ function Map() {
 
       view.ui.add(legend, "top-right");
       
-      const graphicsLayer = new GraphicsLayer();
-      webscene.add(graphicsLayer);
+      // Add sketch widget
+      const graphicsLayerSketch = new GraphicsLayer();
+      webscene.add(graphicsLayerSketch);
+
 
       // Add sketch
       const sketch = new Sketch({
+      // layer: view.map.allLayers.getItemAt(0),
+        layer: graphicsLayerSketch,
         view: view,
-        layer: view.map.allLayers.getItemAt(0),
-        availableCreateTools: ["polyline", "polygon", "rectangle"],
-        creationMode: "update",
-        updateOnGraphicClick: true,
-        visibleElements: {
-          createTools: {
-            point: false,
-            polygon: true,
-            polyline: true,
-            rectangle: false,
-            circle: false
-          },
-          selectionTools:{
-            "lasso-selection": false,
-            "rectangle-selection":false,
-          },
-          settingsMenu: true,
-          undoRedoMenu: true
-        }
+        creationMode: "update" // Auto-select
       });
 
       view.ui.add(sketch, "top-right");

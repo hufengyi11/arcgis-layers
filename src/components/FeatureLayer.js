@@ -24,9 +24,11 @@ function FeatureLayer() {
       Sketch,
       GraphicsLayer,
     ]) => {
+        const graphicsLayer = new GraphicsLayer();
 
         const map = new Map({
-            basemap: "dark-gray-vector"
+            basemap: "dark-gray-vector",
+            layers: [graphicsLayer]
         })
 
         const view = new MapView({
@@ -60,28 +62,25 @@ function FeatureLayer() {
           sources: [
             {
               layer: featureLayer132kVlines,
-              searchFields: ["dno", "voltage", "ob_class"],
-              displayField: "132kV lines",
+              searchFields: ["dno", "voltage"],
               exactMatch: false,
-              outFields: ["dno", "voltage", "ob_class"],
+              outFields: ["dno", "voltage"],
               name: "132kV lines",
               placeholder: "example: LPN"
             },
             {
                 layer: featureLayer66kVlines,
-                searchFields: ["dno", "voltage", "ob_class"],
-                displayField: "66kV lines",
+                searchFields: ["dno", "voltage"],
                 exactMatch: false,
-                outFields: ["dno", "voltage", "ob_class"],
+                outFields: ["dno", "voltage"],
                 name: "66kV lines",
                 placeholder: "example: LPN"
             },
             {
                 layer: featureLayer33kVlines,
-                searchFields: ["dno", "voltage", "ob_class"],
-                displayField: "132kV lines",
+                searchFields: ["dno", "voltage"],
                 exactMatch: false,
-                outFields: ["dno", "voltage", "ob_class"],
+                outFields: ["dno", "voltage"],
                 name: "33kV lines",
                 placeholder: "example: LPN"
             },
@@ -111,8 +110,6 @@ function FeatureLayer() {
         });
         
         // Add sketch widget
-        const graphicsLayer = new GraphicsLayer();
-        // map.add(graphicsLayer);
         
         // Add sketch
         const sketch = new Sketch({

@@ -38,16 +38,55 @@ function FeatureLayer() {
             scale: 2000000
         })
 
+        const template = {
+            // NAME and COUNTY are fields in the service containing the Census Tract (NAME) and county of the feature
+            title: "{dno} {voltage}",
+            content: [
+                {
+                  type: "fields",
+                  fieldInfos: [
+                    {
+                      fieldName: "geo_point_2d",
+                      label: "geo_point_2d"
+                    }, 
+                    {
+                        fieldName: "voltage",
+                        label: "voltage"
+                    }, 
+                    {
+                        fieldName: "cmr",
+                        label: "cmr"
+                    }, 
+                    {
+                        fieldName: "ob_class",
+                        label: "ob_class"
+                    }, 
+                    {
+                        fieldName: "dno",
+                        label: "dno"
+                    },
+                    {
+                        fieldName: "betr_spann",
+                        label: "voltage"
+                    }
+                  ]
+                }
+              ]
+          };
+
         const featureLayer132kVlines = new FeatureLayer({
-            url: "https://services1.arcgis.com/q63dRGvxpbXwQKMG/arcgis/rest/services/132kvoverheadlines/FeatureServer/0"
+            url: "https://services1.arcgis.com/q63dRGvxpbXwQKMG/arcgis/rest/services/132kvoverheadlines/FeatureServer/0",
+            popupTemplate: template
         });
 
         const featureLayer66kVlines = new FeatureLayer({
-            url: "https://services1.arcgis.com/q63dRGvxpbXwQKMG/arcgis/rest/services/ukpn66kvoverheadlinesshapefile/FeatureServer/0"
+            url: "https://services1.arcgis.com/q63dRGvxpbXwQKMG/arcgis/rest/services/ukpn66kvoverheadlinesshapefile/FeatureServer/0",
+            popupTemplate: template
         })
 
         const featureLayer33kVlines = new FeatureLayer({
-            url: "https://services1.arcgis.com/q63dRGvxpbXwQKMG/arcgis/rest/services/33kvoverheadlines/FeatureServer/0"
+            url: "https://services1.arcgis.com/q63dRGvxpbXwQKMG/arcgis/rest/services/33kvoverheadlines/FeatureServer/0", 
+            popupTemplate: template
         })
 
         map.add(featureLayer132kVlines)
@@ -62,25 +101,25 @@ function FeatureLayer() {
           sources: [
             {
               layer: featureLayer132kVlines,
-              searchFields: ["dno", "voltage"],
+              searchFields: ["dno", "voltage", "cmr", "ob_class"],
               exactMatch: false,
-              outFields: ["dno", "voltage"],
+              outFields: ["dno", "voltage", "cmr", "ob_class"],
               name: "132kV lines",
               placeholder: "example: LPN"
             },
             {
                 layer: featureLayer66kVlines,
-                searchFields: ["dno", "voltage"],
+                searchFields: ["dno", "voltage", "cmr", "ob_class"],
                 exactMatch: false,
-                outFields: ["dno", "voltage"],
+                outFields: ["dno", "voltage", "cmr", "ob_class"],
                 name: "66kV lines",
                 placeholder: "example: LPN"
             },
             {
                 layer: featureLayer33kVlines,
-                searchFields: ["dno", "voltage"],
+                searchFields: ["dno", "betr_spann", "cmr", "ob_class"],
                 exactMatch: false,
-                outFields: ["dno", "voltage"],
+                outFields: ["dno", "betr_spann", "cmr", "ob_class"],
                 name: "33kV lines",
                 placeholder: "example: LPN"
             },

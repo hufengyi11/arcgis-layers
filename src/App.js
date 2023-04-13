@@ -1,10 +1,10 @@
 import './App.css';
-import FeatureLayer from './components/FeatureLayer';
+import Map from './Map';
 
 function App() {
   return (
     <div className="App">
-      <FeatureLayer />
+      <Map />
     </div>
   );
 }

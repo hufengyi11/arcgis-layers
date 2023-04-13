@@ -3,11 +3,14 @@ import { setDefaultOptions, loadModules } from "esri-loader";
 
 setDefaultOptions({ css: true });
 
-function WebScene() {
+export const useWebScene = (mapRef) => {
 
   useEffect(() => {
+    let view;
+    
+    const initialiseMap = async (mapRef) => {
 
-    loadModules([
+      const modules = [
       "esri/WebScene",
       "esri/views/SceneView",
       'esri/widgets/Search',
@@ -15,15 +18,17 @@ function WebScene() {
       "esri/widgets/Sketch",
       "esri/layers/GraphicsLayer",
       "esri/layers/FeatureLayer",
-    ]).then(([
-      WebScene, 
-      SceneView, 
-      Search, 
-      LayerList, 
-      Sketch,
-      GraphicsLayer,
-      FeatureLayer
-    ]) => {
+      ];
+
+      const [
+        WebScene, 
+        SceneView, 
+        Search, 
+        LayerList, 
+        Sketch,
+        GraphicsLayer,
+        FeatureLayer
+      ] = await loadModules(modules);
 
         const webscene = new WebScene({
           portalItem: {
@@ -31,7 +36,7 @@ function WebScene() {
           }
         });
 
-        const view = new SceneView({
+        view = new SceneView({
           container: "viewDiv",
           map: webscene
         });
@@ -95,16 +100,10 @@ function WebScene() {
         view.ui.add(sketch, "top-right");
         view.ui.add(layerList, "top-right");
 
-        return () => {
-          if (view) {
-            // destroy the map view
-            view.container = null;
-          }
-        };
-  });
-  }, []);
+      }
 
-  return <div id="viewDiv" style={{ height: "100vh" }}></div>;
-}
+      initialiseMap(mapRef);
 
-export default WebScene;
+       return () => view?.destroy();
+    }, [mapRef]);
+};

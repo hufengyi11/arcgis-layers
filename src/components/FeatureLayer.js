@@ -18,6 +18,8 @@ export const useFeatureLayer = (mapRef) => {
                 'esri/widgets/LayerList',
                 "esri/widgets/Sketch",
                 "esri/layers/GraphicsLayer",
+                "esri/widgets/BasemapToggle",
+                "esri/widgets/BasemapGallery"
             ];
 
             const [
@@ -28,12 +30,14 @@ export const useFeatureLayer = (mapRef) => {
                 LayerList, 
                 Sketch,
                 GraphicsLayer,
+                BasemapToggle, 
+                BasemapGallery
               ] = await loadModules(modules);
       
               const graphicsLayer = new GraphicsLayer();
       
               const map = new Map({
-                  basemap: "dark-gray-vector",
+                  basemap: "light-gray-vector",
                   layers: [graphicsLayer]
               })
       
@@ -83,9 +87,6 @@ export const useFeatureLayer = (mapRef) => {
               const featureLayer132kVlines = new FeatureLayer({
                   url: "https://services1.arcgis.com/q63dRGvxpbXwQKMG/arcgis/rest/services/132kvoverheadlines/FeatureServer/0",
                   popupTemplate: template,
-                  remderer: {
-                    
-                  }
               });
       
               const featureLayer66kVlines = new FeatureLayer({
@@ -133,6 +134,21 @@ export const useFeatureLayer = (mapRef) => {
               map.add(featureLayer132kVlines)
               map.add(featureLayer66kVlines)
               map.add(featureLayer33kVlines)
+
+              // Add basemap toggle
+              const basemapToggle = new BasemapToggle({
+                view: view,
+                nextBasemap: "arcgis-imagery"
+             });
+
+             const basemapGallery = new BasemapGallery({
+              view: view,
+              source: {
+                query: {
+                  title: '"World Basemaps for Developers" AND owner:esri'
+                }
+              }
+            });
       
               // Add search
               const search = new Search({
@@ -188,9 +204,7 @@ export const useFeatureLayer = (mapRef) => {
                   }
                 }
               });
-              
-              // Add sketch widget
-              
+                            
               // Add sketch
               const sketch = new Sketch({
               // layer: view.map.allLayers.getItemAt(0),
@@ -199,10 +213,11 @@ export const useFeatureLayer = (mapRef) => {
                 creationMode: "update" // Auto-select
               });
       
-              view.ui.add(search, 'top-right');
-              view.ui.add(sketch, "top-right");
-              view.ui.add(layerList, "top-right");
-
+              // view.ui.add(search, 'top-right');
+              // view.ui.add(sketch, "top-right");
+              // view.ui.add(layerList, "top-right");
+              // view.ui.add(basemapToggle,"bottom-right");
+              // view.ui.add(basemapGallery, "top-right");
         };
 
         initialiseMap(mapRef);

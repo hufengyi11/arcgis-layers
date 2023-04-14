@@ -37,7 +37,7 @@ export const useFeatureLayer = (mapRef) => {
               const graphicsLayer = new GraphicsLayer();
       
               const map = new Map({
-                  basemap: "light-gray-vector",
+                  basemap: "dark-gray-vector",
                   layers: [graphicsLayer]
               })
       
@@ -138,7 +138,7 @@ export const useFeatureLayer = (mapRef) => {
               // Add basemap toggle
               const basemapToggle = new BasemapToggle({
                 view: view,
-                nextBasemap: "arcgis-imagery"
+                nextBasemap: "light-gray-vector" // light map takes some time to load
              });
 
              const basemapGallery = new BasemapGallery({
@@ -213,10 +213,10 @@ export const useFeatureLayer = (mapRef) => {
                 creationMode: "update" // Auto-select
               });
       
-              // view.ui.add(search, 'top-right');
-              // view.ui.add(sketch, "top-right");
-              // view.ui.add(layerList, "top-right");
-              // view.ui.add(basemapToggle,"bottom-right");
+              view.ui.add(search, 'top-right');
+              view.ui.add(sketch, "top-right");
+              view.ui.add(layerList, "top-right");
+              view.ui.add(basemapToggle,"bottom-right");
               // view.ui.add(basemapGallery, "top-right");
         };
 
